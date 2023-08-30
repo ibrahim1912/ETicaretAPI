@@ -62,7 +62,7 @@ namespace ETicaretAPI.Application.Features.Commands.AppUser.GoogleLogin
             */
             #endregion
 
-            var token = await _authService.GoogleLoginSAync(request.IdToken, 15);
+            var token = await _authService.GoogleLoginSAync(request.IdToken, 900);
             return new()
             {
                 Token = token

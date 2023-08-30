@@ -13,6 +13,7 @@ public static class ConfigureExceptionHandlerExtension
         {
             builder.Run(async context =>
             {
+
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
 
@@ -22,14 +23,13 @@ public static class ConfigureExceptionHandlerExtension
                 {
                     //loglama
                     logger.LogError(contextFeature.Error.Message);
-
                     await context.Response.WriteAsync(JsonSerializer
-                        .Serialize(new
-                        {
-                            StatusCode = context.Response.StatusCode,
-                            Message = contextFeature.Error.Message,
-                            Title = "Hata aldınız"
-                        }));
+                    .Serialize(new
+                    {
+                        StatusCode = context.Response.StatusCode,
+                        Message = contextFeature.Error.Message,
+                        Title = "Hata aldınız"
+                    }));
                 }
             });
         });

@@ -112,3 +112,5 @@ D:\ETicaretUygulaması\ETicaretAPI\Presentation\ETicaretAPI.API\obj\Debug\net6.0
 D:\ETicaretUygulaması\ETicaretAPI\Presentation\ETicaretAPI.API\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.ETicaretAPI.API.props
 D:\ETicaretUygulaması\ETicaretAPI\Presentation\ETicaretAPI.API\obj\Debug\net6.0\staticwebassets.pack.json
 D:\ETicaretUygulaması\ETicaretAPI\Presentation\ETicaretAPI.API\bin\Debug\net6.0\Serilog.Sinks.Seq.dll
+D:\ETicaretUygulaması\ETicaretAPI\Presentation\ETicaretAPI.API\bin\Debug\net6.0\ETicaretAPI.SignalR.dll
+D:\ETicaretUygulaması\ETicaretAPI\Presentation\ETicaretAPI.API\bin\Debug\net6.0\ETicaretAPI.SignalR.pdb

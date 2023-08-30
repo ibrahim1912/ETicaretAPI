@@ -43,7 +43,7 @@ namespace ETicaretAPI.Application.Features.Commands.AppUser.LoginUser
             #endregion
 
 
-            var token = await _authService.LoginAsync(request.UserNameOrEmail, request.Password, 15);
+            var token = await _authService.LoginAsync(request.UserNameOrEmail, request.Password, 900);
 
             return new LoginUserSuccessCommandResponse()
             {

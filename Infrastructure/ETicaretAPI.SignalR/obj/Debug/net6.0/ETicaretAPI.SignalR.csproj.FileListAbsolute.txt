@@ -1,0 +1,17 @@
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.SignalR.deps.json
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.SignalR.dll
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.SignalR.pdb
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.Application.dll
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.Domain.dll
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.Application.pdb
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\bin\Debug\net6.0\ETicaretAPI.Domain.pdb
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.csproj.AssemblyReference.cache
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.GeneratedMSBuildEditorConfig.editorconfig
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.AssemblyInfoInputs.cache
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.AssemblyInfo.cs
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.csproj.CoreCompileInputs.cache
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.csproj.CopyComplete
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.dll
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\refint\ETicaretAPI.SignalR.dll
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ETicaretAPI.SignalR.pdb
+D:\ETicaretUygulaması\ETicaretAPI\Infrastructure\ETicaretAPI.SignalR\obj\Debug\net6.0\ref\ETicaretAPI.SignalR.dll
