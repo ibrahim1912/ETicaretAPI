@@ -7,6 +7,7 @@ using ETicaretAPI.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Context;
 using Serilog.Core;
@@ -79,6 +80,35 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         NameClaimType = ClaimTypes.Name // Jwt üzerinde Name claimne karşılık gelen değeri User.Idnetitty.Name prop dan elde edebiliriz. 
     };
+});
+
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.AddSecurityDefinition(
+        name: "Bearer",
+        securityScheme: new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description =
+                "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345.54321\""
+        }
+    );
+    opt.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                },
+                new string[] { }
+            }
+        }
+    );
 });
 
 var app = builder.Build();

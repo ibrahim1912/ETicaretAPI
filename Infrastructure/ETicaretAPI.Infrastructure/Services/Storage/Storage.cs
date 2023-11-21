@@ -9,12 +9,16 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
         {
             string newFileName = await Task.Run<string>(async () =>
             {
-                string extension = Path.GetExtension(fileName);
+                //string extension = Path.GetExtension(fileName);
+
                 string newFileName = string.Empty;
                 if (first)
                 {
                     string oldName = Path.GetFileNameWithoutExtension(fileName);
-                    newFileName = $"{NameOperation.CharacterRegulatory(oldName)}{extension}";
+                    Console.WriteLine("oldName " + oldName);
+                    newFileName = $"{NameOperation.CharacterRegulatory(oldName)}";
+                    Console.WriteLine("newFileName " + newFileName);
+                    //newFileName = $"{NameOperation.CharacterRegulatory(oldName)}{extension}";
 
 
                 }
@@ -24,7 +28,8 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
                     int indexNo1 = newFileName.IndexOf("-");
                     if (indexNo1 == -1)
                     {
-                        newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
+                        newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2";
+                        //newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
 
 
                     }
@@ -54,7 +59,8 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
 
                         }
                         else
-                            newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
+                            newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2";
+                        //newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
 
 
                     }

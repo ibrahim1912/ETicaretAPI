@@ -12,5 +12,6 @@ namespace ETicaretAPI.Domain.Entities
         public string FileName { get; set; }
         public string Path { get; set; }
         public string Storage { get; set; }
+        //public bool Showcase { get; set; }
     }
 }
