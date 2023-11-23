@@ -27,6 +27,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddSignalRServices();
+builder.Services.AddHttpContextAccessor();//Clienttan gelen request neticesinde oluşturulan HttpContext nesnesine katmanlardaki classlar üzerinden(business logic) erişebilmemizi sağlayan bir servistir //basket servicei içini dolduruken yazdık
 
 Logger log = new LoggerConfiguration()
     .WriteTo.Console()
