@@ -28,6 +28,8 @@ namespace ETicaretAPI.Persistence.Contexts
             builder.Entity<Basket>().HasOne(b => b.Order).WithOne(o => o.Basket)
                 .HasForeignKey<Order>(o => o.Id);
 
+            builder.Entity<Order>().HasIndex(o => o.OrderCode).IsUnique();
+
             base.OnModelCreating(builder);
         }
 
