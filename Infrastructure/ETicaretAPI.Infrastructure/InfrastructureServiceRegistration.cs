@@ -1,5 +1,7 @@
-﻿using ETicaretAPI.Application.Abstraction.Storage;
+﻿using ETicaretAPI.Application.Abstraction.Services;
+using ETicaretAPI.Application.Abstraction.Storage;
 using ETicaretAPI.Application.Abstraction.Token;
+using ETicaretAPI.Infrastructure.Services;
 using ETicaretAPI.Infrastructure.Services.Storage;
 using ETicaretAPI.Infrastructure.Services.Storage.Cloudinary;
 using ETicaretAPI.Infrastructure.Services.Token;
@@ -15,6 +17,7 @@ namespace ETicaretAPI.Infrastructure
         {
             serviceCollection.AddScoped<IStorageService, StorageService>();
             serviceCollection.AddScoped<ITokenHandler, TokenHandler>();
+            serviceCollection.AddScoped<IMailService, MailService>();
 
             //serviceCollection.AddStorage<LocalStorage>();
             serviceCollection.AddStorage<CloudinaryStorage>();

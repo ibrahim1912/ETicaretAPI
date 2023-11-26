@@ -1,4 +1,5 @@
-﻿using ETicaretAPI.Application.Abstraction.Storage;
+﻿using ETicaretAPI.Application.Abstraction.Services;
+using ETicaretAPI.Application.Abstraction.Storage;
 using ETicaretAPI.Application.Features.Commands.Product.CreateProduct;
 using ETicaretAPI.Application.Features.Commands.Product.RemoveProduct;
 using ETicaretAPI.Application.Features.Commands.Product.UpdateProduct;
@@ -17,7 +18,7 @@ namespace ETicaretAPI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestProductsController : ControllerBase
+    public class TestsController : ControllerBase
     {
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
@@ -33,10 +34,10 @@ namespace ETicaretAPI.API.Controllers
         private readonly IStorageService _storageService;
         private readonly IConfiguration _configuration;
 
-
+        readonly IMailService _mailService;
         readonly IMediator _mediator;
 
-        public TestProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IOrderWriteRepository orderWriteRepository, ICustomerWriteRepository customerWriteRepository, IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IFileReadRepository fileReadRepository, IProductImageFileReadRepository productImageFileReadRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration, IMediator mediator)
+        public TestsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IOrderWriteRepository orderWriteRepository, ICustomerWriteRepository customerWriteRepository, IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IFileReadRepository fileReadRepository, IProductImageFileReadRepository productImageFileReadRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration, IMediator mediator, IMailService mailService)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -52,6 +53,7 @@ namespace ETicaretAPI.API.Controllers
             _storageService = storageService;
             _configuration = configuration;
             _mediator = mediator;
+            _mailService = mailService;
         }
 
         [HttpGet("GetProducts")]
@@ -85,8 +87,8 @@ namespace ETicaretAPI.API.Controllers
             var customerId = Guid.NewGuid();
             await _customerWriteRepository.AddAsync(new() { Id = customerId, Name = "Customer 1" });
 
-            await _orderWriteRepository.AddAsync(new() { CustomerId = customerId, Address = "İzmir", Description = "bla bla" });
-            await _orderWriteRepository.AddAsync(new() { CustomerId = customerId, Address = "Ankara", Description = "bla bla 2" });
+            await _orderWriteRepository.AddAsync(new() { /*CustomerId = customerId*/ Address = "İzmir", Description = "bla bla" });
+            await _orderWriteRepository.AddAsync(new() { /*CustomerId = customerId*/ Address = "Ankara", Description = "bla bla 2" });
 
             await _orderWriteRepository.SaveAsync(); //tek save yetiyor 1 tane instace dan dolayı
         }
@@ -378,6 +380,17 @@ namespace ETicaretAPI.API.Controllers
 
             removeProductImageCommandRequest.ImageId = imageId;
             RemoveProductImageCommandResponse response = await _mediator.Send(removeProductImageCommandRequest);
+
+            return Ok();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ExampleMailTest()
+        {
+            string? config = _configuration["Mail:Receiver"];
+            await _mailService.SendMessageAsync(config, "Örnek Mail",
+               "<strong>Bu bir örnek maildir.</strong>");
 
             return Ok();
         }
