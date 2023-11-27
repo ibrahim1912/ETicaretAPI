@@ -1,5 +1,6 @@
 ﻿using ETicaretAPI.Application.Dtos.User;
 using ETicaretAPI.Application.Exceptions;
+using ETicaretAPI.Application.Helpers;
 using ETicaretAPI.Application.Services;
 using ETicaretAPI.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -42,7 +43,7 @@ namespace ETicaretAPI.Persistence.Services
             return response;
         }
 
-        public async Task UpdateRefreshToken(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate)
+        public async Task UpdateRefreshTokeAsync(string refreshToken, AppUser user, DateTime accessTokenDate, int addOnAccessTokenDate)
         {
 
             if (user != null)
@@ -53,8 +54,25 @@ namespace ETicaretAPI.Persistence.Services
             }
             else
                 throw new NotFoundUserException();
+        }
 
+        public async Task UpdatePasswordAsync(string resetToken, string userId, string newPassword)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                resetToken = resetToken.UrlDecode();
+                IdentityResult result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+                if (result.Succeeded)
+                    await _userManager.UpdateSecurityStampAsync(user); //db de securitystamp güncelleniyor link aktif olmayacak  
+                else
+                    throw new PasswordChangeFailedException();
+
+            }
 
         }
+
     }
 }

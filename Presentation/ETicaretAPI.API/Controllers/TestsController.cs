@@ -385,15 +385,15 @@ namespace ETicaretAPI.API.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> ExampleMailTest()
-        {
-            string? config = _configuration["Mail:Receiver"];
-            await _mailService.SendMessageAsync(config, "Örnek Mail",
-               "<strong>Bu bir örnek maildir.</strong>");
+        //[HttpGet]
+        //public async Task<IActionResult> ExampleMailTest()
+        //{
+        //    string? config = _configuration["Mail:Receiver"];
+        //    await _mailService.SendMailAsync(config, "Örnek Mail",
+        //       "<strong>Bu bir örnek maildir.</strong>");
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }
 

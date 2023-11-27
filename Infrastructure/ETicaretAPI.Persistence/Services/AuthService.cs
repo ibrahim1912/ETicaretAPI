@@ -1,7 +1,9 @@
-﻿using ETicaretAPI.Application.Abstraction.Token;
+﻿using ETicaretAPI.Application.Abstraction.Services;
+using ETicaretAPI.Application.Abstraction.Token;
 using ETicaretAPI.Application.Dtos;
 using ETicaretAPI.Application.Dtos.Facebook;
 using ETicaretAPI.Application.Exceptions;
+using ETicaretAPI.Application.Helpers;
 using ETicaretAPI.Application.Services;
 using ETicaretAPI.Domain.Entities.Identity;
 using Google.Apis.Auth;
@@ -22,9 +24,10 @@ namespace ETicaretAPI.Persistence.Services
         readonly ITokenHandler _tokenHandler;
         readonly SignInManager<U.AppUser> _signInManager;
         readonly IUserService _userService;
+        readonly IMailService _mailService;
 
 
-        public AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, UserManager<AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService)
+        public AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, UserManager<AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService, IMailService mailService)
         {
             _httpClient = httpClientFactory.CreateClient();
             _configuration = configuration;
@@ -32,6 +35,7 @@ namespace ETicaretAPI.Persistence.Services
             _tokenHandler = tokenHandler;
             _signInManager = signInManager;
             _userService = userService;
+            _mailService = mailService;
         }
 
         private async Task<Token> CreateUserExternalAsync(AppUser user, string email, string name, UserLoginInfo info, int accessTokenLifeTime)
@@ -62,7 +66,7 @@ namespace ETicaretAPI.Persistence.Services
 
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
 
-                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 5);
+                await _userService.UpdateRefreshTokeAsync(token.RefreshToken, user, token.Expiration, 5);
 
                 return token;
 
@@ -133,7 +137,7 @@ namespace ETicaretAPI.Persistence.Services
             {
                 Token token = _tokenHandler.CreateAccessToken(accessTokenLifeTime, user);
 
-                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 300);
+                await _userService.UpdateRefreshTokeAsync(token.RefreshToken, user, token.Expiration, 300);
 
                 return token;
             }
@@ -149,12 +153,40 @@ namespace ETicaretAPI.Persistence.Services
             {
                 Token token = _tokenHandler.CreateAccessToken(300, user);
 
-                await _userService.UpdateRefreshToken(token.RefreshToken, user, token.Expiration, 300);
+                await _userService.UpdateRefreshTokeAsync(token.RefreshToken, user, token.Expiration, 300);
 
                 return token;
             }
             else
                 throw new NotFoundUserException();
+        }
+
+        public async Task PasswordResetAsync(string email)
+        {
+            AppUser user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                string resetToken = await
+                    _userManager.GeneratePasswordResetTokenAsync(user);
+
+                resetToken = resetToken.UrlEncode(); //üretilen tokenı http protokolüne uygun şekilde değiştiriyor
+
+                await _mailService.SendPasswordResetMailAsync(email, user.Id, resetToken);
+            }
+        }
+
+        public async Task<bool> VerifyResetTokenAsync(string resetToken, string userId)
+        {
+            AppUser user = await _userManager.FindByIdAsync(userId);
+
+            if (user != null)
+            {
+                resetToken = resetToken.UrlDecode(); //kendimiz yazdık
+
+                return await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", resetToken);
+            }
+
+            return false;
         }
     }
 }
