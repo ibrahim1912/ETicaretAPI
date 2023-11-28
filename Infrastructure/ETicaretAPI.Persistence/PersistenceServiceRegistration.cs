@@ -49,6 +49,8 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IBasketReadRepository, BasketReadRepository>();
             services.AddScoped<IBasketItemReadRepository, BasketItemReadRepository>();
             services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
+            services.AddScoped<ICompletedOrderReadRepository, CompletedOrderReadRepository>();
+            services.AddScoped<ICompletedOrderWriteRepository, CompletedOrderWriteRepository>();
 
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IBasketService, BasketService>();

@@ -20,15 +20,26 @@ namespace ETicaretAPI.Persistence.Contexts
         public DbSet<InvoiceFile> InvoiceFiles { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<CompletedOrder> CompletedOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Order>().HasKey(b => b.Id);
+            builder.Entity<Order>()
+                .HasKey(b => b.Id);
 
-            builder.Entity<Basket>().HasOne(b => b.Order).WithOne(o => o.Basket)
+            builder.Entity<Basket>()
+                .HasOne(b => b.Order)
+                .WithOne(o => o.Basket)
                 .HasForeignKey<Order>(o => o.Id);
 
-            builder.Entity<Order>().HasIndex(o => o.OrderCode).IsUnique();
+            builder.Entity<Order>()
+                .HasIndex(o => o.OrderCode)
+                .IsUnique();
+
+            builder.Entity<Order>()
+                .HasOne(o => o.CompletedOrder)
+                .WithOne(co => co.Order)
+                .HasForeignKey<CompletedOrder>(co => co.OrderId);
 
             base.OnModelCreating(builder);
         }
