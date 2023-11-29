@@ -54,8 +54,8 @@ namespace ETicaretAPI.Persistence.Contexts
             foreach (EntityEntry<BaseEntity> entry in entries)
                 _ = entry.State switch
                 {
-                    EntityState.Added => entry.Entity.CreatedDate = DateTime.UtcNow,
-                    EntityState.Modified => entry.Entity.UpdatedDate = DateTime.UtcNow,
+                    EntityState.Added => entry.Entity.CreatedDate = DateTime.UtcNow.AddHours(3),
+                    EntityState.Modified => entry.Entity.UpdatedDate = DateTime.UtcNow.AddHours(3),
                     _ => DateTime.UtcNow
                 };
             return await base.SaveChangesAsync(cancellationToken);
