@@ -1,4 +1,5 @@
 ﻿using ETicaretAPI.Application.Abstraction.Services;
+using ETicaretAPI.Application.Abstraction.Services.Configurations;
 using ETicaretAPI.Application.Abstraction.Storage;
 using ETicaretAPI.Application.Features.Commands.Product.CreateProduct;
 using ETicaretAPI.Application.Features.Commands.Product.RemoveProduct;
@@ -36,8 +37,9 @@ namespace ETicaretAPI.API.Controllers
 
         readonly IMailService _mailService;
         readonly IMediator _mediator;
+        readonly IAuthorizeService _authorizeService;
 
-        public TestsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IOrderWriteRepository orderWriteRepository, ICustomerWriteRepository customerWriteRepository, IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IFileReadRepository fileReadRepository, IProductImageFileReadRepository productImageFileReadRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration, IMediator mediator, IMailService mailService)
+        public TestsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IOrderWriteRepository orderWriteRepository, ICustomerWriteRepository customerWriteRepository, IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IFileReadRepository fileReadRepository, IProductImageFileReadRepository productImageFileReadRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration, IMediator mediator, IMailService mailService, IAuthorizeService authorizeService)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -54,6 +56,7 @@ namespace ETicaretAPI.API.Controllers
             _configuration = configuration;
             _mediator = mediator;
             _mailService = mailService;
+            _authorizeService = authorizeService;
         }
 
         [HttpGet("GetProducts")]
@@ -92,8 +95,6 @@ namespace ETicaretAPI.API.Controllers
 
             await _orderWriteRepository.SaveAsync(); //tek save yetiyor 1 tane instace dan dolayı
         }
-
-
 
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get([FromRoute] GetByIdProductQueryRequest getByIdProductQueryRequest)
@@ -384,7 +385,7 @@ namespace ETicaretAPI.API.Controllers
             return Ok();
         }
 
-
+        #region Mail gönderen endpoint
         //[HttpGet]
         //public async Task<IActionResult> ExampleMailTest()
         //{
@@ -394,6 +395,10 @@ namespace ETicaretAPI.API.Controllers
 
         //    return Ok();
         //}
+        #endregion
+
+
+
     }
 }
 

@@ -1,4 +1,7 @@
-﻿using ETicaretAPI.Application.Features.Commands.Basket.AddItemToBasket;
+﻿using ETicaretAPI.Application.Consts;
+using ETicaretAPI.Application.CustomAttributes;
+using ETicaretAPI.Application.Enums;
+using ETicaretAPI.Application.Features.Commands.Basket.AddItemToBasket;
 using ETicaretAPI.Application.Features.Commands.Basket.RemoveBasketItem;
 using ETicaretAPI.Application.Features.Commands.Basket.UpdateQuanttiy;
 using ETicaretAPI.Application.Features.Queries.Basket.GetBasketItems;
@@ -22,6 +25,7 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpGet]
+        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Baskets, ActionType = ActionType.Reading, Definition = "Get Basket Items")]
         public async Task<IActionResult> GetBasketItems([FromQuery] GetBasketItemsQueryRequest getBasketItemsQueryRequest)
         {
 
@@ -32,6 +36,7 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpPost]
+        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Baskets, ActionType = ActionType.Writing, Definition = "Add Item To Basket")]
         public async Task<IActionResult> AddItemToBasket(AddItemToBasketCommandRequest addItemToBasketCommandRequest)
         {
             AddItemToBasketCommandResponse response = await _mediator.Send(addItemToBasketCommandRequest);
@@ -41,6 +46,7 @@ namespace ETicaretAPI.API.Controllers
 
 
         [HttpPut]
+        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Baskets, ActionType = ActionType.Updating, Definition = "Update Quantity")]
         public async Task<IActionResult> UpdateQuantity(UpdateQuantityCommandRequest updateQuantiyCommandRequest)
         {
             UpdateQuantityCommandResponse response = await _mediator.Send(updateQuantiyCommandRequest);
@@ -48,6 +54,7 @@ namespace ETicaretAPI.API.Controllers
             return Ok(response);
         }
 
+        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Baskets, ActionType = ActionType.Deleting, Definition = "Remove Basket Item")]
         [HttpDelete("{BasketItemId}")]
         public async Task<IActionResult> RemoveBasketItem([FromRoute] RemoveBasketItemCommandRequest removeBasketItemCommandRequest)
         {
