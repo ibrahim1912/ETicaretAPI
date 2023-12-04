@@ -18,7 +18,9 @@ namespace ETicaretAPI.Persistence
     {
         public static void AddPersistenceServices(this IServiceCollection services)
         {
-            services.AddDbContext<ETicaretAPIDbContext>(options => options.UseNpgsql(Configuration.ConnectionString));
+            services.AddDbContext<ETicaretAPIDbContext>(options => options.UseSqlServer(Configuration.ConnectionString));
+            //services.AddDbContext<ETicaretAPIDbContext>(options => options.UseMySql(connectionString: Configuration.ConnectionString, serverVersion: new MySqlServerVersion(new Version(8, 0, 1))));
+
 
             services.AddIdentity<AppUser, AppRole>(options =>
             {
@@ -51,7 +53,13 @@ namespace ETicaretAPI.Persistence
             services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
             services.AddScoped<ICompletedOrderReadRepository, CompletedOrderReadRepository>();
             services.AddScoped<ICompletedOrderWriteRepository, CompletedOrderWriteRepository>();
+            services.AddScoped<IAuthorizeMenuReadRepository, AuthorizeMenuReadRepository>();
+            services.AddScoped<IAuthorizeMenuWriteRepository, AuthorizeMenuWriteRepository>();
+            services.AddScoped<IEndpointReadRepository, EndpointReadRepository>();
+            services.AddScoped<IEndpointWriteRepository, EndpointWriteRepository>();
 
+            services.AddScoped<IAuthorizationEndpointService, AuthorizationEndpointService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IUserService, UserService>();
