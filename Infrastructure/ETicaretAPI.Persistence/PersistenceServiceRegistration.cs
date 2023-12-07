@@ -3,7 +3,6 @@ using ETicaretAPI.Application.Repositories;
 using ETicaretAPI.Application.Services;
 using ETicaretAPI.Application.Services.Authentications;
 using ETicaretAPI.Domain.Entities.Identity;
-using ETicaretAPI.Persistence.Concretes;
 using ETicaretAPI.Persistence.Contexts;
 using ETicaretAPI.Persistence.Repositories;
 using ETicaretAPI.Persistence.Repositories.Fİle;
@@ -33,7 +32,7 @@ namespace ETicaretAPI.Persistence
             .AddDefaultTokenProviders();//Bu identity mekanizması üzerinden resetToken üretmemizi sağlayan fonksiyon için ekledik.
 
 
-            services.AddSingleton<IProductService, ProductService>();
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddScoped<ICustomerReadRepository, CustomerReadRepository>();
             services.AddScoped<ICustomerWriteRepository, CustomerWriteRepository>();
