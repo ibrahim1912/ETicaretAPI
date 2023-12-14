@@ -5,13 +5,13 @@ using ETicaretAPI.Application.Enums;
 using ETicaretAPI.Application.Features.Commands.Product.CreateProduct;
 using ETicaretAPI.Application.Features.Commands.Product.RemoveProduct;
 using ETicaretAPI.Application.Features.Commands.Product.UpdateProduct;
+using ETicaretAPI.Application.Features.Commands.Product.UpdateStockQrCodeToProduct;
 using ETicaretAPI.Application.Features.Commands.ProductImageFile.ChangeShowcaseImage;
 using ETicaretAPI.Application.Features.Commands.ProductImageFile.RemoveProductImage;
 using ETicaretAPI.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI.Application.Features.Queries.Product.GetByIdProduct;
 using ETicaretAPI.Application.Features.Queries.ProductImageFile.GetProductImage;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -21,15 +21,12 @@ namespace ETicaretAPI.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseController
     {
-        readonly IMediator _mediator;
         readonly IProductService _productService;
-
-
-        public ProductsController(IMediator mediator, IProductService productService)
+        public ProductsController(IProductService productService)
         {
-            _mediator = mediator;
+
             _productService = productService;
         }
 
@@ -44,7 +41,7 @@ namespace ETicaretAPI.API.Controllers
             */
             #endregion
 
-            GetByIdProductQueryResponse response = await _mediator.Send(getByIdProductQueryRequest);
+            GetByIdProductQueryResponse response = await Mediator.Send(getByIdProductQueryRequest);
             return Ok(response);
 
         }
@@ -80,7 +77,7 @@ namespace ETicaretAPI.API.Controllers
 
             //return Unauthorized();
             // throw new Exception("Lay loy lom");
-            GetAllProductQueryResponse response = await _mediator.Send(getAllProductQueryRequest);
+            GetAllProductQueryResponse response = await Mediator.Send(getAllProductQueryRequest);
             return Ok(response);
         }
 
@@ -109,7 +106,7 @@ namespace ETicaretAPI.API.Controllers
             */
             #endregion
 
-            CreateProductCommandResponse response = await _mediator.Send(createProductCommandRequest);
+            CreateProductCommandResponse response = await Mediator.Send(createProductCommandRequest);
 
             return StatusCode((int)HttpStatusCode.Created);
 
@@ -117,10 +114,10 @@ namespace ETicaretAPI.API.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPut("update-product")]
         [Authorize(AuthenticationSchemes = "Admin")]
         [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Updating, Definition = "Update Product")]
-        public async Task<IActionResult> Put([FromBody] UpdateProductCommandRequest updateProductCommandRequest)
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductCommandRequest updateProductCommandRequest)
         {
             #region ilk hali
             /*
@@ -134,7 +131,7 @@ namespace ETicaretAPI.API.Controllers
             */
             #endregion
 
-            UpdateProductCommandResponse response = await _mediator.Send(updateProductCommandRequest);
+            UpdateProductCommandResponse response = await Mediator.Send(updateProductCommandRequest);
 
             return Ok();
         }
@@ -146,7 +143,7 @@ namespace ETicaretAPI.API.Controllers
         public async Task<IActionResult> Delete([FromRoute] RemoveProductCommandRequest removeProductCommandRequest)
         {
 
-            RemoveProductCommandResponse response = await _mediator.Send(removeProductCommandRequest);
+            RemoveProductCommandResponse response = await Mediator.Send(removeProductCommandRequest);
 
             return Ok();
         }
@@ -274,7 +271,7 @@ namespace ETicaretAPI.API.Controllers
             #endregion
 
             uploadProductImageCommandRequest.Files = Request.Form.Files;
-            UploadProductImageCommandResponse response = await _mediator.Send(uploadProductImageCommandRequest);
+            UploadProductImageCommandResponse response = await Mediator.Send(uploadProductImageCommandRequest);
             return Ok();
         }
 
@@ -305,7 +302,7 @@ namespace ETicaretAPI.API.Controllers
             */
             #endregion
 
-            List<GetProductImagesQueryResponse> responses = await _mediator.Send(getProductImagesQueryRequest);
+            List<GetProductImagesQueryResponse> responses = await Mediator.Send(getProductImagesQueryRequest);
 
             return Ok(responses);
         }
@@ -334,7 +331,7 @@ namespace ETicaretAPI.API.Controllers
             #endregion
 
             removeProductImageCommandRequest.ImageId = imageId;
-            RemoveProductImageCommandResponse response = await _mediator.Send(removeProductImageCommandRequest);
+            RemoveProductImageCommandResponse response = await Mediator.Send(removeProductImageCommandRequest);
 
             return Ok();
         }
@@ -345,7 +342,7 @@ namespace ETicaretAPI.API.Controllers
         [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Products, ActionType = ActionType.Updating, Definition = "Change Showcase Image")]
         public async Task<IActionResult> ChangeShowcaseImage([FromQuery] ChangeShowcaseImageCommandRequest changeShowcaseImageCommandRequest)
         {
-            ChangeShowcaseImageCommandResponse response = await _mediator.Send(changeShowcaseImageCommandRequest);
+            ChangeShowcaseImageCommandResponse response = await Mediator.Send(changeShowcaseImageCommandRequest);
 
             return Ok(response);
         }
@@ -360,6 +357,13 @@ namespace ETicaretAPI.API.Controllers
             return File(response, "image/png");
         }
 
+
+        [HttpPut("qrcode")]
+        public async Task<IActionResult> UpdateStockQrCodeToProduct(UpdateStockQrCodeToProductCommandRequest updateStockQrCodeToProductCommandRequest)
+        {
+            UpdateStockQrCodeToProductCommandResponse response = await Mediator.Send(updateStockQrCodeToProductCommandRequest);
+            return Ok(response);
+        }
     }
 }
 

@@ -21,6 +21,7 @@ namespace ETicaretAPI.Infrastructure
             serviceCollection.AddScoped<ITokenHandler, TokenHandler>();
             serviceCollection.AddScoped<IMailService, MailService>();
             serviceCollection.AddScoped<IAuthorizeService, AuthorizeService>();
+            serviceCollection.AddScoped<IQRCodeService, QRCodeService>();
 
             //serviceCollection.AddStorage<LocalStorage>();
             serviceCollection.AddStorage<CloudinaryStorage>();
