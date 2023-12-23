@@ -6,8 +6,6 @@ namespace ETicaretAPI.API.Controllers
     [ApiController]
     public class FilesController : ControllerBase
     {
-
-
         private readonly IConfiguration _configuration;
 
         public FilesController(IConfiguration configuration)

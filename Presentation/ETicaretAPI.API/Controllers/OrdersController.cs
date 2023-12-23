@@ -5,7 +5,6 @@ using ETicaretAPI.Application.Features.Commands.Order.CompleteOrder;
 using ETicaretAPI.Application.Features.Commands.Order.CreateOrder;
 using ETicaretAPI.Application.Features.Queries.Order.GetAllOrder;
 using ETicaretAPI.Application.Features.Queries.Order.GetByIdOrder;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,45 +14,38 @@ namespace ETicaretAPI.API.Controllers
     [ApiController]
     [Authorize(AuthenticationSchemes = "Admin")]
 
-    public class OrdersController : ControllerBase
+    public class OrdersController : BaseController
     {
-        readonly IMediator _mediator;
-
-        public OrdersController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpPost]
-        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Orders, ActionType = ActionType.Writing, Definition = "Create Orders")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Writing, Definition = "Create Orders")]
         public async Task<IActionResult> CreateOrder(CreateOrderCommandRequest createOrderCommandRequest)
         {
-            CreateOrderCommandResponse response = await _mediator.Send(createOrderCommandRequest);
+            CreateOrderCommandResponse response = await Mediator.Send(createOrderCommandRequest);
             return Ok(response);
         }
 
 
         [HttpGet]
-        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get All Orders")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get All Orders")]
         public async Task<IActionResult> GetAllOrders([FromQuery] GetAllOrderQueryRequest getAllOrderQueryRequest)
         {
-            GetAllOrderQueryResponse response = await _mediator.Send(getAllOrderQueryRequest);
+            GetAllOrderQueryResponse response = await Mediator.Send(getAllOrderQueryRequest);
             return Ok(response);
         }
 
         [HttpGet("{Id}")]
-        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get By Id Order")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Reading, Definition = "Get By Id Order")]
         public async Task<IActionResult> GetByIdOrder([FromRoute] GetByIdOrderQueryRequest getByIdOrderQueryRequest)
         {
-            GetByIdOrderQueryResponse response = await _mediator.Send(getByIdOrderQueryRequest);
+            GetByIdOrderQueryResponse response = await Mediator.Send(getByIdOrderQueryRequest);
             return Ok(response);
         }
 
         [HttpGet("complete-order/{id}")]
-        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.Orders, ActionType = ActionType.Updating, Definition = "Completed Order")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.Orders, ActionType = ActionType.Updating, Definition = "Completed Order")]
         public async Task<IActionResult> CompletedOrder([FromRoute] CompleteOrderCommandRequest completeOrderCommandRequest)
         {
-            CompleteOrderCommandResponse response = await _mediator.Send(completeOrderCommandRequest);
+            CompleteOrderCommandResponse response = await Mediator.Send(completeOrderCommandRequest);
             return Ok(response);
         }
     }

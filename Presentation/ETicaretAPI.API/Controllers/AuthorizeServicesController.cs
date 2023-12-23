@@ -20,7 +20,7 @@ namespace ETicaretAPI.API.Controllers
         }
 
         [HttpGet]
-        [AuthorizeDefinition(Menu = AuthorizeDefintionConstants.AuthorizeServices, ActionType = ActionType.Reading, Definition = "Get Authorize Definition Endpoints")]
+        [AuthorizeDefinition(Menu = AuthorizeDefinitionConstants.AuthorizeServices, ActionType = ActionType.Reading, Definition = "Get Authorize Definition Endpoints")]
         public IActionResult GetAuthorizeDefinitionEndpoints()
         {
             var datas = _authorizeService.GetAuthorizeDefinitionEndpoints(typeof(Program));

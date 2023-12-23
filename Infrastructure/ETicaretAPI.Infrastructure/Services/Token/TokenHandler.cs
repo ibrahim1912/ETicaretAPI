@@ -28,13 +28,14 @@ namespace ETicaretAPI.Infrastructure.Services.Token
 
             token.Expiration = DateTime.UtcNow.AddSeconds(second);
 
+
             JwtSecurityToken securityToken = new(
                 audience: _configuration["Token:Audience"],
                 issuer: _configuration["Token:Issuer"],
                 expires: token.Expiration,
                 notBefore: DateTime.UtcNow,
                 signingCredentials: signingCredentials,
-                claims: new List<Claim> { new(ClaimTypes.Name, user.UserName) }
+                claims: new List<Claim> { new(ClaimTypes.Name, user.UserName), new(ClaimTypes.NameIdentifier, user.Id.ToString()) }
                 );
 
             JwtSecurityTokenHandler tokenHandler = new();

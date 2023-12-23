@@ -49,9 +49,9 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
         public bool HasFile(string folderPath, string fileName)
         {
             var resources = _cloudinary.ListResourcesByPrefix(folderPath);
-
-            return resources.Resources.Any(resource => resource.PublicId ==
+            var result = resources.Resources.Any(resource => resource.PublicId ==
             $"{folderPath}/{fileName}");
+            return result;
 
         }
 

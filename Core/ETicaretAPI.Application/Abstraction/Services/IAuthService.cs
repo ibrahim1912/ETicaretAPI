@@ -6,5 +6,6 @@ namespace ETicaretAPI.Application.Services
     {
         Task PasswordResetAsync(string email);
         Task<bool> VerifyResetTokenAsync(string resetToken, string userId);
+
     }
 }

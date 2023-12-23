@@ -9,31 +9,19 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
         {
             string newFileName = await Task.Run<string>(async () =>
             {
-                //string extension = Path.GetExtension(fileName);
 
                 string newFileName = string.Empty;
                 if (first)
                 {
                     string oldName = Path.GetFileNameWithoutExtension(fileName);
-                    Console.WriteLine("oldName " + oldName);
                     newFileName = $"{NameOperation.CharacterRegulatory(oldName)}";
-                    Console.WriteLine("newFileName " + newFileName);
-                    //newFileName = $"{NameOperation.CharacterRegulatory(oldName)}{extension}";
-
-
                 }
                 else
                 {
                     newFileName = fileName;
                     int indexNo1 = newFileName.IndexOf("-");
                     if (indexNo1 == -1)
-                    {
-                        newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2";
-                        //newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
-
-
-                    }
-
+                        newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-1";
                     else
                     {
                         int lastIndex = 0;
@@ -48,7 +36,7 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
                             }
                         }
 
-                        int indexNo2 = newFileName.IndexOf(".");
+                        int indexNo2 = newFileName.Length;
                         string fileNo = newFileName.Substring(indexNo1 + 1, indexNo2 - indexNo1 - 1);
 
                         if (int.TryParse(fileNo, out int _fileNo))
@@ -56,28 +44,18 @@ namespace ETicaretAPI.Infrastructure.Services.Storage
                             _fileNo++;
                             newFileName = newFileName.Remove(indexNo1 + 1, indexNo2 - indexNo1 - 1)
                                                 .Insert(indexNo1 + 1, _fileNo.ToString());
-
                         }
                         else
-                            newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2";
-                        //newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-2{extension}";
-
+                            newFileName = $"{Path.GetFileNameWithoutExtension(newFileName)}-1";
 
                     }
                 }
 
+
                 if (hasFileMethod(pathOrContainerName, newFileName))
-                {
-
                     return await FileRenameAsync(pathOrContainerName, newFileName, hasFileMethod, false);
-                }
-
                 else
-                {
-
                     return newFileName;
-                }
-
             });
 
             return newFileName;

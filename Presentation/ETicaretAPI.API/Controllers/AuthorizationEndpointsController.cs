@@ -1,37 +1,28 @@
 ﻿using ETicaretAPI.Application.Features.Commands.AppUser.AuthorizationEndpoint.AssignRoleEndpoint;
 using ETicaretAPI.Application.Features.Queries.AuthorizationEndpoint.GetRolesToEndpoint;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ETicaretAPI.API.Controllers
+namespace ETicaretAPI.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AuthorizationEndpointsController : BaseController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthorizationEndpointsController : ControllerBase
+    [HttpPost("[action]")]
+
+    public async Task<IActionResult> GetRolesToEndpoint(GetRolesToEndpointQueryRequest getRolesToEndpointQueryRequest)
     {
-        IMediator _mediator;
+        GetRolesToEndpointQueryResponse response = await Mediator.Send(getRolesToEndpointQueryRequest);
 
-        public AuthorizationEndpointsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        return Ok(response);
+    }
 
-        [HttpPost("[action]")]
+    [HttpPost]
+    public async Task<IActionResult> AssignRoleEndpoint(AssignRoleEndpointCommandRequest assignRoleEndpointCommandRequest)
+    {
+        assignRoleEndpointCommandRequest.Type = typeof(Program);
+        AssignRoleEndpointCommandResponse response = await Mediator.Send(assignRoleEndpointCommandRequest);
 
-        public async Task<IActionResult> GetRolesToEndpoint(GetRolesToEndpointQueryRequest getRolesToEndpointQueryRequest)
-        {
-            GetRolesToEndpointQueryResponse response = await _mediator.Send(getRolesToEndpointQueryRequest);
-
-            return Ok(response);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AssignRoleEndpoint(AssignRoleEndpointCommandRequest assignRoleEndpointCommandRequest)
-        {
-            assignRoleEndpointCommandRequest.Type = typeof(Program);
-            AssignRoleEndpointCommandResponse response = await _mediator.Send(assignRoleEndpointCommandRequest);
-
-            return Ok(response);
-        }
+        return Ok(response);
     }
 }

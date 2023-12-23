@@ -1,4 +1,3 @@
-using ETicaretAPI.API.Configurations.ColumnWriters;
 using ETicaretAPI.API.Extensions;
 using ETicaretAPI.Application;
 using ETicaretAPI.Infrastructure;
@@ -6,12 +5,14 @@ using ETicaretAPI.Persistence;
 using ETicaretAPI.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Context;
 using Serilog.Core;
-using Serilog.Sinks.PostgreSQL;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
 using System.Security.Claims;
 using System.Text;
 
@@ -29,20 +30,43 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddSignalRServices();
 builder.Services.AddHttpContextAccessor();//Clienttan gelen request neticesinde oluşturulan HttpContext nesnesine katmanlardaki classlar üzerinden(business logic) erişebilmemizi sağlayan bir servistir //basket servicei içini dolduruken yazdık
 
+
+#region PostgreSql Loglama 
+//Logger log = new LoggerConfiguration()
+//    .WriteTo.Console()
+//    .WriteTo.File("logs/log.txt")
+//    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("PostgreSqlConnection"), "logs",
+//        needAutoCreateTable: true,
+//        columnOptions: new Dictionary<string, ColumnWriterBase>
+//        {
+//            {"message" , new RenderedMessageColumnWriter() },
+//            { "message_template", new MessageTemplateColumnWriter() },
+//            { "level" , new LevelColumnWriter()},
+//            { "time_stamp", new TimestampColumnWriter()},
+//            { "exception", new ExceptionColumnWriter()},
+//            { "log_event" , new LogEventSerializedColumnWriter()},
+//            { "user_name" , new  UserNameColumnWriter()}
+//        })
+//    .WriteTo.Seq(builder.Configuration["Seq:ServerURL"])
+//    .Enrich.FromLogContext()
+//    .MinimumLevel.Information()
+//    .CreateLogger();
+#endregion
+
+
 Logger log = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/log.txt")
-    .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("PostgreSqlConnection"), "logs",
-        needAutoCreateTable: true,
-        columnOptions: new Dictionary<string, ColumnWriterBase>
+    .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("MsSqlConnection"),
+        tableName: "logs",
+        autoCreateSqlTable: true,
+        columnOptions: new Serilog.Sinks.MSSqlServer.ColumnOptions
         {
-            {"message" , new RenderedMessageColumnWriter() },
-            { "message_template", new MessageTemplateColumnWriter() },
-            { "level" , new LevelColumnWriter()},
-            { "time_stamp", new TimestampColumnWriter()},
-            { "exception", new ExceptionColumnWriter()},
-            { "log_event" , new LogEventSerializedColumnWriter()},
-            { "user_name" , new  UserNameColumnWriter()}
+            AdditionalColumns = new Collection<SqlColumn>
+            {
+
+                new SqlColumn { ColumnName = "UserName", PropertyName = "Properties.UserName" }
+            }
         })
     .WriteTo.Seq(builder.Configuration["Seq:ServerURL"])
     .Enrich.FromLogContext()

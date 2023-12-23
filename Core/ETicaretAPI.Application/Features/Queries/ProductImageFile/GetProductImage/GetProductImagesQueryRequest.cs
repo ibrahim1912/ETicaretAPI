@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace ETicaretAPI.Application.Features.Queries.ProductImageFile.GetProductImage
+namespace ETicaretAPI.Application.Features.Queries.ProductImageFilE.GetProductImage
 {
     public class GetProductImagesQueryRequest : IRequest<List<GetProductImagesQueryResponse>>
     {

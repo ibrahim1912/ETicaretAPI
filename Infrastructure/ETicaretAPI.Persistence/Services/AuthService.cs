@@ -27,6 +27,7 @@ namespace ETicaretAPI.Persistence.Services
         readonly IMailService _mailService;
 
 
+
         public AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, UserManager<AppUser> userManager, ITokenHandler tokenHandler, SignInManager<AppUser> signInManager, IUserService userService, IMailService mailService)
         {
             _httpClient = httpClientFactory.CreateClient();
@@ -36,6 +37,7 @@ namespace ETicaretAPI.Persistence.Services
             _signInManager = signInManager;
             _userService = userService;
             _mailService = mailService;
+
         }
 
         private async Task<Token> CreateUserExternalAsync(AppUser user, string email, string name, UserLoginInfo info, int accessTokenLifeTime)
@@ -145,6 +147,7 @@ namespace ETicaretAPI.Persistence.Services
             throw new AuthenticationErrorException();
         }
 
+
         public async Task<Token> RefreshTokenLoginAsync(string refreshToken)
         {
             AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
@@ -188,5 +191,7 @@ namespace ETicaretAPI.Persistence.Services
 
             return false;
         }
+
+
     }
 }

@@ -11,7 +11,9 @@ using ETicaretAPI.Application.Features.Commands.ProductImageFile.RemoveProductIm
 using ETicaretAPI.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI.Application.Features.Queries.Product.GetByIdProduct;
-using ETicaretAPI.Application.Features.Queries.ProductImageFile.GetProductImage;
+using ETicaretAPI.Application.Features.Queries.Product.GetByIdProductWithImage;
+using ETicaretAPI.Application.Features.Queries.ProductImageFilE.GetProductImage;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -21,13 +23,15 @@ namespace ETicaretAPI.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class ProductsController : BaseController
+    public class ProductsController : ControllerBase
     {
         readonly IProductService _productService;
-        public ProductsController(IProductService productService)
+        readonly IMediator Mediator;
+        public ProductsController(IProductService productService, IMediator mediator)
         {
 
             _productService = productService;
+            Mediator = mediator;
         }
 
         [HttpGet("{Id}")]
@@ -272,6 +276,7 @@ namespace ETicaretAPI.API.Controllers
 
             uploadProductImageCommandRequest.Files = Request.Form.Files;
             UploadProductImageCommandResponse response = await Mediator.Send(uploadProductImageCommandRequest);
+            await _productService.Test(uploadProductImageCommandRequest.Id);
             return Ok();
         }
 
@@ -364,6 +369,15 @@ namespace ETicaretAPI.API.Controllers
             UpdateStockQrCodeToProductCommandResponse response = await Mediator.Send(updateStockQrCodeToProductCommandRequest);
             return Ok(response);
         }
-    }
-}
 
+        [HttpGet("[action]/{Id}")]
+        public async Task<IActionResult> GetByIdProductWithImages([FromRoute] GetByIdProductWithImageQueryRequest getByIdProductWithImageQueryRequest)
+        {
+
+            GetByIdProductWithImageQueryResponse response = await Mediator.Send(getByIdProductWithImageQueryRequest);
+            return Ok(response);
+
+        }
+    }
+
+}

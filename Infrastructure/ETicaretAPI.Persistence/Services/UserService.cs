@@ -1,4 +1,6 @@
-﻿using ETicaretAPI.Application.Dtos.User;
+﻿using ETicaretAPI.Application.Abstraction.Services;
+using ETicaretAPI.Application.Consts;
+using ETicaretAPI.Application.Dtos.User;
 using ETicaretAPI.Application.Exceptions;
 using ETicaretAPI.Application.Helpers;
 using ETicaretAPI.Application.Repositories;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using U = ETicaretAPI.Domain.Entities.Identity;
 
 namespace ETicaretAPI.Persistence.Services
@@ -18,11 +21,13 @@ namespace ETicaretAPI.Persistence.Services
 
         readonly UserManager<U.AppUser> _userManager;
         readonly IEndpointReadRepository _endpointReadRepository;
+        readonly IAuthorizationEndpointService _authorizationEndpointService;
 
-        public UserService(UserManager<AppUser> userManager, IEndpointReadRepository endpointReadRepository)
+        public UserService(UserManager<AppUser> userManager, IEndpointReadRepository endpointReadRepository, IAuthorizationEndpointService authorizationEndpointService)
         {
             _userManager = userManager;
             _endpointReadRepository = endpointReadRepository;
+            _authorizationEndpointService = authorizationEndpointService;
         }
 
         public async Task<CreateUserResponse> CreateAsync(CreateUserRequest createUserRequest)
@@ -113,7 +118,7 @@ namespace ETicaretAPI.Persistence.Services
         {
             AppUser user = await _userManager.FindByIdAsync(userIdOrName);
             if (user == null)
-                await _userManager.FindByNameAsync(userIdOrName);
+                user = await _userManager.FindByNameAsync(userIdOrName);
 
             if (user != null)
             {
@@ -180,25 +185,86 @@ namespace ETicaretAPI.Persistence.Services
             {
                 return false;
             }
+
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
+            //var userName = jsonToken?.Claims.First().Value.ToString();
+            //AppUser? user = await _userManager.FindByNameAsync(userName);
+
+            var nameIdentifierClaim = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            AppUser? user = await _userManager.FindByIdAsync(nameIdentifierClaim);
 
 
 
-            var userName = jsonToken?.Claims.First().Value.ToString();
 
-            AppUser? user = await _userManager.FindByNameAsync(userName);
-
-            // AppUser? user = await _userManager.Users.FirstOrDefaultAsync(u => u.RefreshToken == token);
-
-
-            //var name = context.HttpContext.User.Identity?.Name;
+            string[] defaultRoles = { "Get Basket Items Yetkisi", "Add Item To Basket Yetkisi",
+            "Create Orders Yetkisi","Update Quantity Yetkisi","Remove Basket Item Yetkisi"};
             var userRoles = await GetRolesToUserAsync(user.Id);
-            if (!userRoles.Any())
-                return false;
-            else
+            bool resultRole = defaultRoles.All(userRoles.Contains) && defaultRoles.Length == userRoles.Length;
+
+
+            if (user.UserName == Admin.UserName || !resultRole) //admin farklı bir role vermediği sürece paneli göremez
                 return true;
+            else
+                return false;
+        }
+
+        public async Task AssignDefaultRoleToUser(string userName, string[] roles)
+        {
+            AppUser user = await _userManager.FindByNameAsync(userName);
+            await AssignRoleToUserAsync(user.Id, roles);
+        }
+
+        public async Task<SingleUser> GetByIdUserAsync(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+            //var userName = jsonToken?.Claims.First().Value.ToString();
+            //AppUser? user = await _userManager.FindByNameAsync(userName);
+
+            var nameIdentifierClaim = jsonToken?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            AppUser? user = await _userManager.FindByIdAsync(nameIdentifierClaim);
+
+            return new SingleUser
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                NameSurname = user.NameSurname
+            };
+
+
+        }
+
+        public async Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest user)
+        {
+            AppUser appUser = await _userManager.FindByIdAsync(user.Id);
+
+            appUser.UserName = user.UserName;
+            appUser.Email = user.Email;
+            appUser.NameSurname = user.NameSurname;
+            IdentityResult result = await _userManager.UpdateAsync(appUser);
+
+            UpdateUserResponse response = new()
+            {
+                Succeeded = result.Succeeded,
+
+            };
+
+            if (result.Succeeded)
+            {
+                response.Message = "Kullanıcı başarıyla güncelleştirildi.";
+
+            }
+
+            else
+                foreach (var error in result.Errors)
+                    response.Message += $"{error.Code} - {error.Description}\n";
+
+            return response;
+
+
         }
 
         public int TotalUsersCount => _userManager.Users.Count();

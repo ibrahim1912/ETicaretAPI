@@ -1,4 +1,5 @@
-﻿using ETicaretAPI.Application.CustomAttributes;
+﻿using ETicaretAPI.Application.Consts;
+using ETicaretAPI.Application.CustomAttributes;
 using ETicaretAPI.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,14 +24,19 @@ namespace ETicaretAPI.Application.Filters
         {
             var name = context.HttpContext.User.Identity?.Name;
 
-            if (!string.IsNullOrEmpty(name) && name != "tester") //default admin
+            if (!string.IsNullOrEmpty(name) && name != Admin.UserName) //default admin
             {
                 var descriptor = context.ActionDescriptor as ControllerActionDescriptor; //action ile ilgili bilgiler //controller action ismini almak için as ediyoruz
                 //tanımlamış oldugumuz attribute bilgilerini elde etmemiz lazım
                 var attribute = descriptor.MethodInfo.GetCustomAttribute(typeof(AuthorizeDefinitionAttribute)) as AuthorizeDefinitionAttribute;
                 var httpAttribute = descriptor.MethodInfo.GetCustomAttributes(typeof(HttpMethodAttribute)) as HttpMethodAttribute;
 
-                var code = $"{(httpAttribute != null ? httpAttribute.HttpMethods.First() : HttpMethods.Get)}.{attribute.ActionType}.{attribute.Definition.Replace(" ", "")}";
+                var httpAttribute2 = descriptor.MethodInfo.GetCustomAttributes(true)
+                .FirstOrDefault(a => a.GetType() == typeof(HttpMethodAttribute) || a.GetType().BaseType == typeof(HttpMethodAttribute)) as HttpMethodAttribute;
+
+
+                var code = $"{(httpAttribute2 != null ? httpAttribute2.HttpMethods.First() : HttpMethods.Get)}.{attribute.ActionType}.{attribute.Definition.Replace(" ", "")}";
+
 
                 var hasRole = await _userService.HasRolePermissionToEndpointAsync(name, code);
                 if (!hasRole)

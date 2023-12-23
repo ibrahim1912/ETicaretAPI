@@ -2,6 +2,6 @@
 {
     public class InvoiceFile : File
     {
-        public decimal Price { get; set; }
+        public float Price { get; set; }
     }
 }

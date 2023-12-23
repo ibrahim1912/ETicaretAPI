@@ -19,6 +19,7 @@ namespace ETicaretAPI.Persistence.Services
         private readonly IBasketItemReadRepository _basketItemReadRepository;
         private readonly IBasketReadRepository _basketReadRepository;
 
+
         public BasketService(IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager, IOrderReadRepository orderReadRepository, IBasketWriteRepository basketWriteRepository, IBasketItemWriteRepository basketItemWriteRepository, IBasketItemReadRepository basketItemReadRepository, IBasketReadRepository basketReadRepository)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -28,10 +29,12 @@ namespace ETicaretAPI.Persistence.Services
             _basketItemWriteRepository = basketItemWriteRepository;
             _basketItemReadRepository = basketItemReadRepository;
             _basketReadRepository = basketReadRepository;
+
         }
         private async Task<Basket?> ContextUser()
         {
             var username = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+
             if (!string.IsNullOrEmpty(username))
             {
                 AppUser? user = await _userManager.Users
@@ -64,6 +67,8 @@ namespace ETicaretAPI.Persistence.Services
 
             throw new Exception("Beklenmeyen bir hatayla karşılaşıldı...");
         }
+
+
         public async Task AddItemToBasketAsync(WM_Create_BasketItem basketItem)
         {
             Basket? basket = await ContextUser();

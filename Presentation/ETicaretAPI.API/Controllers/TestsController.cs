@@ -8,7 +8,7 @@ using ETicaretAPI.Application.Features.Commands.ProductImageFile.RemoveProductIm
 using ETicaretAPI.Application.Features.Commands.ProductImageFile.UploadProductImage;
 using ETicaretAPI.Application.Features.Queries.Product.GetAllProduct;
 using ETicaretAPI.Application.Features.Queries.Product.GetByIdProduct;
-using ETicaretAPI.Application.Features.Queries.ProductImageFile.GetProductImage;
+using ETicaretAPI.Application.Features.Queries.ProductImageFilE.GetProductImage;
 using ETicaretAPI.Application.Repositories;
 using ETicaretAPI.Domain.Entities;
 using MediatR;

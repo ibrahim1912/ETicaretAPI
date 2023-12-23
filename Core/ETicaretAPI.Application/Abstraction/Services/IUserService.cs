@@ -14,6 +14,10 @@ namespace ETicaretAPI.Application.Services
         Task<bool> HasRolePermissionToEndpointAsync(string name, string code); //bu sayfa için rol yetkisi var mı
 
         Task<bool> HasUserRole(string token);
+        Task AssignDefaultRoleToUser(string userName, string[] roles);
+        Task<SingleUser> GetByIdUserAsync(string token);
+
+        Task<UpdateUserResponse> UpdateUserAsync(UpdateUserRequest user);
         int TotalUsersCount { get; }
     }
 }

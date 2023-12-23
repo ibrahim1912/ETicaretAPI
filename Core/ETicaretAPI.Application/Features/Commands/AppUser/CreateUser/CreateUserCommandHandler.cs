@@ -70,6 +70,10 @@ namespace ETicaretAPI.Application.Features.Commands.AppUser.CreateUser
             CreateUserResponse response = await _userService.CreateAsync(createUserRequestMapped);
             CreateUserCommandResponse createUserCommandResponse = _mapper.Map<CreateUserCommandResponse>(response);
 
+            string[] roles = { "Get Basket Items Yetkisi", "Add Item To Basket Yetkisi",
+            "Create Orders Yetkisi","Update Quantity Yetkisi","Remove Basket Item Yetkisi"};
+            await _userService.AssignDefaultRoleToUser(request.UserName, roles);
+
             return createUserCommandResponse;
 
             #endregion

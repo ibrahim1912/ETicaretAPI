@@ -21,6 +21,8 @@ namespace ETicaretAPI.Persistence.Contexts
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
         public DbSet<CompletedOrder> CompletedOrders { get; set; }
+        public DbSet<Endpoint> Endpoints { get; set; }
+        public DbSet<AuthorizeMenu> AuthorizeMenus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -44,6 +46,8 @@ namespace ETicaretAPI.Persistence.Contexts
             base.OnModelCreating(builder);
         }
 
+
+
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             /* IEnumerable<EntityEntry<BaseEntity>> entries = ChangeTracker
@@ -61,6 +65,8 @@ namespace ETicaretAPI.Persistence.Contexts
             return await base.SaveChangesAsync(cancellationToken);
 
         }
+
+
 
 
     }
